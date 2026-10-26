@@ -288,8 +288,31 @@
     removeEventListener('scroll', onScroll);
     if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
   }
+  /* ---------- phones and portrait tablets: a short autoplaying push-in ---------- */
+  const shBox = $('.static-hero');
+  const shVideo = $('.sh-video');
+  let shLoaded = false;
+  function startStaticMotion() {
+    if (!shVideo || reduceMQ.matches) return;
+    if (!shLoaded) {
+      shLoaded = true;
+      shVideo.poster = 'assets/img/hero-mobile-poster.jpg';
+      shVideo.src = 'assets/video/hero-mobile.mp4';
+      shVideo.addEventListener('playing', () => shBox.classList.add('sh-on'), { once: true });
+      shVideo.addEventListener('error', () => shBox.classList.remove('sh-on'));
+    }
+    const pr = shVideo.play();
+    if (pr && pr.catch) pr.catch(() => {});
+  }
+  function stopStaticMotion() {
+    if (!shVideo || !shLoaded) return;
+    shVideo.pause();
+    if (reduceMQ.matches) shBox.classList.remove('sh-on');
+  }
+
   function applyHeroMode() {
-    if (MQLS.some(m => m.matches)) disableScrub(); else enableScrub();
+    if (MQLS.some(m => m.matches)) { disableScrub(); startStaticMotion(); }
+    else { stopStaticMotion(); enableScrub(); }
   }
 
   /* ---------- scroll-drawn process line ---------- */
@@ -453,7 +476,7 @@
 
   MQLS.forEach(m => m.addEventListener('change', applyHeroMode));
   applyHeroMode();
-  reduceMQ.addEventListener('change', e => { if (e.matches) pinToFinalStates(); else applyHeroMode(); });
+  reduceMQ.addEventListener('change', e => { if (e.matches) { stopStaticMotion(); pinToFinalStates(); } else applyHeroMode(); });
   if (reduceMQ.matches) pinToFinalStates();
 
   document.addEventListener('visibilitychange', () => document.body.classList.toggle('paused', document.hidden));

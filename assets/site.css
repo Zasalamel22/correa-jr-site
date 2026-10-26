@@ -145,6 +145,12 @@ p{margin:0}
   .hero{height:auto}
   .stage{display:none}
   .static-hero{display:flex;flex-direction:column;justify-content:flex-end;min-height:100vh;min-height:100svh;padding:120px var(--pad) 56px;background:linear-gradient(180deg,rgba(7,8,15,.25) 0%,rgba(7,8,15,0) 30%,rgba(7,8,15,.55) 58%,rgba(7,8,15,.96) 100%),url(img/hero-ending.jpg) 52% 30%/cover no-repeat;text-shadow:var(--tshadow)}
+  .static-hero{position:relative;overflow:hidden;isolation:isolate}
+  .static-hero>*{position:relative;z-index:2}
+  .static-hero>.sh-video,.static-hero>.sh-shade{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  .sh-video{object-fit:cover;object-position:50% 30%;opacity:0;transition:opacity .9s var(--ease-out)}
+  .static-hero.sh-on .sh-video{opacity:1}
+  .sh-shade{z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,8,15,.25) 0%,rgba(7,8,15,0) 30%,rgba(7,8,15,.55) 58%,rgba(7,8,15,.96) 100%)}
   .static-hero .hero-title{font-size:clamp(48px,14vw,96px)}
   .static-hero .lede{font-size:19px;max-width:28ch;margin-bottom:14px}
   .static-line{color:var(--text-secondary);max-width:32ch;margin-bottom:28px}
