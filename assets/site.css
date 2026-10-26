@@ -97,19 +97,22 @@ h2 em,.hero-title em,.brand em,.settle-title .acc,.foot-mark em,.wm-row em{text-
 .stage.video-failed #hero-video{display:none}
 .poster-end{opacity:0;transition:opacity 1.2s var(--ease-out)}
 .stage.video-failed.late .poster-end{opacity:1}
+.ap,.ap-in{position:absolute;inset:0}
+/* during the lens intro the footage is clipped to a growing circle: the compositor scales a clip, nothing is repainted */
+.ap.closed{inset:auto;left:var(--apx);top:var(--apy);width:var(--apd);height:var(--apd);border-radius:50%;overflow:hidden;will-change:transform}
+.ap.closed>.ap-in{inset:auto;left:calc(var(--apx) * -1);top:calc(var(--apy) * -1);width:var(--apw);height:var(--aph);will-change:transform}
 .scrim{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(4,5,12,0) 35%,rgba(4,5,12,.62) 100%),linear-gradient(rgba(4,5,12,.5),rgba(4,5,12,0) 22%)}
 
 /* the lens: wordmark with an iris for the O; scrolling flies through it */
 .lens-rig{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
 .lens-rig.off{visibility:hidden}
 .lens-group{position:absolute;inset:0;will-change:transform}
-.plate{position:absolute;inset:0;background:var(--canvas)}
 .lens-iris,.lens-glass{position:absolute;left:calc(var(--hx,50vw) - var(--hr,100px));top:calc(var(--hy,50vh) - var(--hr,100px));width:calc(var(--hr,100px) * 2);height:calc(var(--hr,100px) * 2);border-radius:50%}
 .lens-iris{overflow:visible;will-change:transform}
-.lens-glass{overflow:hidden;will-change:opacity;background:radial-gradient(circle at 33% 27%,rgba(255,255,255,.16),rgba(255,255,255,0) 30%),radial-gradient(circle at 70% 78%,rgba(90,120,255,.24),rgba(90,120,255,0) 44%),radial-gradient(circle,rgba(0,0,0,0) 58%,rgba(0,0,0,.6) 100%)}
+.lens-glass{overflow:hidden;will-change:transform,opacity;background:radial-gradient(circle at 33% 27%,rgba(255,255,255,.16),rgba(255,255,255,0) 30%),radial-gradient(circle at 70% 78%,rgba(90,120,255,.24),rgba(90,120,255,0) 44%),radial-gradient(circle,rgba(0,0,0,0) 58%,rgba(0,0,0,.6) 100%)}
 .lens-glass i{position:absolute;inset:-25%;background:linear-gradient(110deg,rgba(255,255,255,0) 42%,rgba(255,255,255,.3) 50%,rgba(255,255,255,0) 58%);transform:translateX(-110%);animation:glint 1.9s var(--ease-io) 1.2s both}
 @keyframes glint{to{transform:translateX(110%)}}
-.wm{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;color:var(--text-primary);will-change:opacity}
+.wm{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;color:var(--text-primary);will-change:transform,opacity}
 .wm-row{display:flex;align-items:baseline;font-family:var(--f-display);font-weight:800;font-size:var(--wmF);line-height:.8;text-transform:uppercase;letter-spacing:-.005em;white-space:nowrap}
 .wm-l{display:inline-block;overflow:hidden;padding:.1em .004em .03em;margin:-.1em 0 -.03em}
 .wm-l>span{display:inline-block;transform:translateY(115%);animation:wmup 1.25s var(--ease-out) forwards;animation-delay:calc(.15s + var(--i) * 70ms)}
@@ -151,7 +154,7 @@ h2 em,.hero-title em,.brand em,.settle-title .acc,.foot-mark em,.wm-row em{text-
 @media (max-height:560px){.vf .chip{display:none}}
 
 /* caption bands */
-.band{position:absolute;opacity:0;visibility:hidden;--k:0;text-shadow:var(--tshadow);z-index:3}
+.band{position:absolute;opacity:0;visibility:hidden;--k:0;text-shadow:var(--tshadow);z-index:3;will-change:opacity}
 .band::before{content:"";position:absolute;inset:-45% -40%;z-index:-1;pointer-events:none;opacity:calc(.35 + .65 * var(--k,1));background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(4,5,12,.92) 0%,rgba(4,5,12,.9) 52%,rgba(4,5,12,.44) 72%,rgba(4,5,12,.12) 88%,rgba(4,5,12,0) 100%)}
 .b-right{right:4.5vw;top:16vh;width:min(560px,37vw)}
 .b-left{left:5vw;top:24vh;width:min(440px,29vw)}
@@ -169,8 +172,8 @@ h2 em,.hero-title em,.brand em,.settle-title .acc,.foot-mark em,.wm-row em{text-
 .c{display:inline-block}
 .band[data-fx=depth] .w{--kc:clamp(0,(var(--k,0) - var(--th,0)) * 2.6,1);opacity:var(--kc);transform:scale(calc(.82 + .18 * var(--kc)))}
 .focus-wrap{position:relative;display:block}
-.focus-wrap .soft{position:absolute;inset:0;filter:blur(10px);opacity:calc(1 - var(--k,0))}
-.focus-wrap .sharp{opacity:var(--k,0)}
+.focus-wrap .soft{position:absolute;inset:0;filter:blur(10px);opacity:calc(1 - var(--k,0));will-change:opacity}
+.focus-wrap .sharp{opacity:var(--k,0);will-change:opacity}
 .band[data-fx=snap] .c{--kc:clamp(0,(var(--k,0) - var(--th,0)) * 3,1);opacity:var(--kc);transform:translateX(calc((1 - var(--kc)) * var(--jx,0px)))}
 .band[data-fx=rise] .w{--kc:clamp(0,(var(--k,0) - var(--th,0)) * 2.8,1);opacity:var(--kc);transform:translateY(calc((1 - var(--kc)) * 28px))}
 
@@ -188,8 +191,10 @@ h2 em,.hero-title em,.brand em,.settle-title .acc,.foot-mark em,.wm-row em{text-
 @media (max-width: 720px), (orientation: portrait) and (max-width: 1024px), (orientation: portrait) and (pointer: coarse), (orientation: landscape) and (pointer: coarse) and (max-height: 560px), (prefers-reduced-motion: reduce){
   .hero{height:auto}
   .stage{display:none}
-  .static-hero{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:100vh;min-height:100svh;padding:120px var(--pad) 56px;overflow:hidden;isolation:isolate;background:url(img/hero-ending.jpg) 52% 30%/cover no-repeat;text-shadow:var(--tshadow)}
-  .static-hero>.sh-video,.static-hero>.sh-shade{position:absolute;inset:0;width:100%;height:100%}
+  .static-hero{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:100vh;min-height:100svh;padding:120px var(--pad) 56px;overflow:hidden;isolation:isolate;background:var(--canvas);text-shadow:var(--tshadow)}
+  .static-hero>.ap{z-index:0}
+  .sh-bg,.sh-video,.sh-shade{position:absolute;inset:0;width:100%;height:100%}
+  .sh-bg{background:url(img/hero-ending.jpg) 52% 30%/cover no-repeat}
   .sh-video{z-index:0;object-fit:cover;object-position:50% 30%;opacity:0;transition:opacity .9s var(--ease-out)}
   .static-hero.sh-on .sh-video{opacity:1}
   .sh-shade{z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(7,8,15,.25) 0%,rgba(7,8,15,0) 30%,rgba(7,8,15,.55) 58%,rgba(7,8,15,.96) 100%)}
@@ -288,15 +293,15 @@ h2 em,.hero-title em,.brand em,.settle-title .acc,.foot-mark em,.wm-row em{text-
 .mo-text>p{color:var(--text-secondary);max-width:40ch}
 .mo-img{position:relative;aspect-ratio:2/3;max-width:440px;margin-left:auto;border-radius:6px;overflow:hidden;padding:0}
 .mo-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.mo-soft{filter:blur(16px) brightness(.8);transform:scale(1.08);opacity:calc(1 - var(--f));transition:opacity .15s linear}
-.mo-sharp{opacity:var(--f);transition:opacity .15s linear}
+.mo-soft{filter:blur(16px) brightness(.8);transform:scale(1.08);opacity:calc(1 - var(--f));will-change:opacity}
+.mo-sharp{opacity:var(--f);will-change:opacity}
 .mo-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 .mo-img.shot .mo-flash{animation:flash .7s var(--ease-out)}
 @keyframes flash{0%{opacity:.85}100%{opacity:0}}
 .mo-img .vf-c{z-index:2;border-color:rgba(236,233,228,.85);width:28px;height:28px}
 .mo-img .vf-c.tl{left:16px;top:16px}.mo-img .vf-c.tr{right:16px;top:16px}.mo-img .vf-c.bl{left:16px;bottom:16px}.mo-img .vf-c.br{right:16px;bottom:16px}
 .mo-img.shot .vf-c{border-color:var(--accent-hover)}
-.hold{margin-top:30px;display:inline-flex;align-items:center;gap:14px;background:none;border:1px solid var(--line-strong);border-radius:999px;padding:8px 22px 8px 8px;color:var(--text-primary);font-family:var(--f-body);font-weight:600;font-size:16px;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none;transition:border-color .3s var(--ease-out),background .3s var(--ease-out)}
+.hold{margin-top:30px;display:inline-flex;align-items:center;gap:14px;background:none;border:1px solid var(--line-strong);border-radius:999px;padding:8px 22px 8px 8px;color:var(--text-primary);font-family:var(--f-body);font-weight:600;font-size:16px;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:none;transition:border-color .3s var(--ease-out),background .3s var(--ease-out)}
 .hold:hover{border-color:var(--accent-text);background:rgba(47,95,232,.1)}
 .hold svg{width:44px;height:44px;transform:rotate(-90deg);color:var(--accent-hover)}
 .hold-fill{stroke-dashoffset:calc(126 - 126*var(--f,0))}

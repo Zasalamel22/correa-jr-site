@@ -204,10 +204,10 @@
   }
 
   /* ---------- the lens: wordmark with an iris for the O ---------- */
-  function createLens(rig) {
+  function createLens(rig, ap) {
+    const apIn = ap.firstElementChild;
     const mk = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.appendChild(e); return e; };
     const group = mk('div', 'lens-group', rig);
-    const plate = mk('div', 'plate', group);
     const iris = svgEl('svg', { class: 'lens-iris' }, group);
     const setIris = buildIris(iris, true);
     const glass = mk('div', 'lens-glass', group);
@@ -228,7 +228,7 @@
     mk('i', '', cue);
 
     let zmax = 1;
-    const last = { z: -1, wo: -1, go: -1, off: null, f: '' };
+    const last = { z: -1, wo: -1, go: -1, off: null, f: '', iris: null, closed: null };
     function layout() {
       const prev = group.style.transform;
       group.style.transform = 'none';
@@ -242,21 +242,40 @@
         group.style.setProperty('--hy', hy.toFixed(1) + 'px');
         group.style.setProperty('--hr', hr.toFixed(1) + 'px');
         group.style.transformOrigin = `${hx.toFixed(1)}px ${hy.toFixed(1)}px`;
-        plate.style.background = `radial-gradient(circle ${hr.toFixed(1)}px at ${hx.toFixed(1)}px ${hy.toFixed(1)}px, rgba(7,8,15,0) ${(hr - 0.8).toFixed(1)}px, #07080f ${hr.toFixed(1)}px)`;
-        zmax = Math.hypot(Math.max(hx, gr.width - hx), Math.max(hy, gr.height - hy)) / hr * 1.06;
+        ap.style.setProperty('--apx', (hx - hr).toFixed(1) + 'px');
+        ap.style.setProperty('--apy', (hy - hr).toFixed(1) + 'px');
+        ap.style.setProperty('--apd', (hr * 2).toFixed(1) + 'px');
+        ap.style.setProperty('--apw', gr.width.toFixed(1) + 'px');
+        ap.style.setProperty('--aph', gr.height.toFixed(1) + 'px');
+        apIn.style.transformOrigin = `${hx.toFixed(1)}px ${hy.toFixed(1)}px`;
+        zmax = Math.hypot(Math.max(hx, gr.width - hx), Math.max(hy, gr.height - hy)) / hr * 1.04;
       }
       group.style.transform = prev;
       last.z = -1;
     }
     function set(q, dRest) {
       const z = Math.pow(zmax, smoothstep(q, 0.22, 1));
-      if (Math.abs(z - last.z) > 0.0008) { last.z = z; group.style.transform = `translate3d(0,0,0) scale(${z.toFixed(4)})`; }
+      const closed = q < 0.999;
+      if (closed !== last.closed) {
+        last.closed = closed; last.z = -1;
+        ap.classList.toggle('closed', closed);
+        if (!closed) { ap.style.transform = ''; apIn.style.transform = ''; }
+      }
+      if (closed && Math.abs(z - last.z) > 0.0008) {
+        last.z = z;
+        group.style.transform = `translate3d(0,0,0) scale(${z.toFixed(4)})`;
+        ap.style.transform = `translate3d(0,0,0) scale(${z.toFixed(4)})`;
+        apIn.style.transform = `translate3d(0,0,0) scale(${(1 / z).toFixed(5)})`;
+      }
+      // Each piece is hidden as soon as it is fully faded, so the compositor stops drawing it.
       const wo = +(1 - smoothstep(q, 0.26, 0.58)).toFixed(3);
-      if (wo !== last.wo) { last.wo = wo; wm.style.opacity = wo; }
-      const go = +(1 - smoothstep(q, 0.35, 0.8)).toFixed(3);
-      if (go !== last.go) { last.go = go; glass.style.opacity = go; }
+      if (wo !== last.wo) { last.wo = wo; wm.style.opacity = wo; wm.style.visibility = wo > 0 ? '' : 'hidden'; }
+      const go = +(1 - smoothstep(q, 0.3, 0.62)).toFixed(3);
+      if (go !== last.go) { last.go = go; glass.style.opacity = go; glass.style.visibility = go > 0 ? '' : 'hidden'; }
       const d = dRest + (104 - dRest) * smoothstep(q, 0, 0.36);
-      setIris(d);
+      const irisOn = d < 100.5;
+      if (irisOn !== last.iris) { last.iris = irisOn; iris.style.visibility = irisOn ? '' : 'hidden'; }
+      if (irisOn) setIris(d);
       const f = fStop(d);
       if (f !== last.f) { last.f = f; fEl.textContent = f; }
       const off = q >= 0.999;
@@ -345,8 +364,8 @@
     ramp: el.dataset.ramp ? parseFloat(el.dataset.ramp) : null,
     last: i === all.length - 1, fx: el.dataset.fx, op: -1, k: -1, ks: -1, kb: -1
   }));
-  const lensD = createLens($('.stage .lens-rig'));
-  const lensM = createLens($('.static-hero .lens-rig'));
+  const lensD = createLens($('.stage .lens-rig'), $('.stage .ap'));
+  const lensM = createLens($('.static-hero .lens-rig'), $('.static-hero .ap'));
   const setShutter = buildIris(shutterSvg, false);
   shutterSvg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
 
@@ -755,7 +774,7 @@
   const holdBtn = $('#hold');
   const moSec = $('#moment');
   const moImg = $('.mo-img');
-  let holdF = 0, holding = false, holdRaf = null, holdLast = 0, holdDone = false, holdPinned = false;
+  let holdF = 0, holding = false, holdRaf = null, holdLast = 0, holdDone = false, holdPinned = false, holdReset = false;
   function holdRender() {
     moImg.style.setProperty('--f', holdF.toFixed(3));
     holdBtn.style.setProperty('--f', holdF.toFixed(3));
@@ -768,23 +787,25 @@
   }
   function holdTick(now) {
     const dt = Math.min(64, now - (holdLast || now)); holdLast = now;
-    if (holding) holdF = Math.min(1, holdF + dt / 1500);
+    // A new press after a capture first eases the photo back out of focus, then focuses again.
+    if (holdReset) { holdF = Math.max(0, holdF - dt / 380); if (holdF <= 0) holdReset = false; }
+    else if (holding) holdF = Math.min(1, holdF + dt / 1500);
     else holdF = Math.max(0, holdF - dt / 900);
     holdRender();
-    if (holdF >= 1) { holdFinish(false); holdRaf = null; holdLast = 0; return; }
-    if (!holding && holdF <= 0) { holdRaf = null; holdLast = 0; return; }
+    if (!holdReset && holdF >= 1) { holdFinish(false); holdRaf = null; holdLast = 0; return; }
+    if (!holdReset && !holding && holdF <= 0) { holdRaf = null; holdLast = 0; return; }
     holdRaf = requestAnimationFrame(holdTick);
   }
   function holdStart(e) {
-    if (holdDone) return;
     if (reduceMQ.matches) { holdFinish(true); return; }
+    if (holdDone) { holdDone = false; holdReset = true; moSec.classList.remove('done'); moImg.classList.remove('shot'); }
     if (e && e.type === 'pointerdown') { try { holdBtn.setPointerCapture(e.pointerId); } catch (x) {} }
     holding = true;
     if (holdRaf === null) holdRaf = requestAnimationFrame(holdTick);
   }
   function holdEnd() {
     holding = false;
-    if (!holdDone && holdRaf === null && holdF > 0) holdRaf = requestAnimationFrame(holdTick);
+    if (!holdDone && holdRaf === null && (holdF > 0 || holdReset)) holdRaf = requestAnimationFrame(holdTick);
   }
   if (holdBtn) {
     holdBtn.addEventListener('pointerdown', holdStart);
