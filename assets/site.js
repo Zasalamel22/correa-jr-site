@@ -313,9 +313,10 @@
     mfCache = mfWords.map(() => -1);
     updateManifesto();
   }
-  function updateManifesto() {
+  function updateManifesto(r) {
     if (!mfWords.length) return;
-    const r = mfEl.getBoundingClientRect(), vh = innerHeight;
+    if (!r) r = mfEl.getBoundingClientRect();
+    const vh = innerHeight;
     if (r.bottom < -vh || r.top > vh * 2) return;
     const p = clamp((vh * 0.82 - r.top) / (r.height + vh * 0.25), 0, 1);
     const n = mfWords.length;
@@ -342,7 +343,7 @@
     });
     $$('.split').forEach((el, i) => splitEl(el, i));
     $$('.lang button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
-    const wa = $('#wa'); if (wa) wa.href = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(d._wa);
+    $$('#wa, #wa2').forEach(a => { a.href = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(d._wa); });
     refreshReelLabels();
     if (save) { try { localStorage.setItem('jr-lang', l); } catch (e) {} }
     bands.forEach(b => { b.op = -1; b.k = -1; b.ks = -1; b.kb = -1; });
@@ -595,9 +596,9 @@
     const step = now => {
       if (shIntro !== 'running') return;
       const t = (now - t0) / 1000;
-      if (!played && t >= 1.25) { played = true; playStatic(); }
-      const q = clamp((t - 1.35) / 1.5, 0, 1);
-      lensM.set(q, 34 * easeOutBack(clamp(t / 1.1, 0, 1)));
+      if (!played && t >= 0.95) { played = true; playStatic(); }
+      const q = clamp((t - 1.0) / 1.25, 0, 1);
+      lensM.set(q, 34 * easeOutBack(clamp(t / 0.85, 0, 1)));
       if (q >= 1) { shIntro = 'done'; shBox.classList.add('sh-done'); return; }
       requestAnimationFrame(step);
     };
@@ -618,10 +619,10 @@
   const steps = $('.steps');
   const stepsLine = $('.steps-line');
   let lastDraw = -1, linePinned = false;
-  function drawLine() {
+  function drawLine(top) {
     if (!steps || linePinned) return;
-    const r = steps.getBoundingClientRect();
-    const p = clamp((innerHeight * 0.85 - r.top) / (innerHeight * 0.6), 0, 1);
+    if (top === undefined) top = steps.getBoundingClientRect().top;
+    const p = clamp((innerHeight * 0.85 - top) / (innerHeight * 0.6), 0, 1);
     const v = +(1 - p).toFixed(3);
     if (v !== lastDraw) { lastDraw = v; stepsLine.style.setProperty('--draw', v); }
   }
@@ -646,8 +647,10 @@
 
   /* ---------- reveal choreography ---------- */
   function setupReveals() {
+    // On phones the reels are a horizontal strip, so they reveal together with the strip.
+    const reelSel = matchMedia('(max-width: 720px)').matches ? '.reels' : '.reel';
     const groups = [
-      '.sec-head > *', '.mf-sign', '.reel', '.ap-text > *, .ap-list li', '.ap-media img', '.mo-text > *:not(.mo-done)',
+      '.sec-head > *', '.mf-sign', reelSel, '.ap-text > *, .ap-list li', '.ap-media img', '.mo-text > *:not(.mo-done)',
       '.sv-row', '.sv-foot > *', '.steps li', '.ab-text > *', '.ab-media img', '.faq-list details', '.ct-text > *', '.ct-media'
     ];
     groups.forEach(sel => $$(sel).forEach((el, i) => { el.classList.add('rv'); el.style.setProperty('--i', i % 8); }));
@@ -819,11 +822,39 @@
 
   /* ---------- nav state ---------- */
   const nav = $('.nav');
-  let navSolid = null;
-  function navState() {
-    const solid = scrollY > (hero.offsetHeight - innerHeight * 1.1) || MQLS.some(m => m.matches) && scrollY > 40;
+  let navSolid = null, heroH = hero.offsetHeight;
+  function navState(y = scrollY) {
+    const solid = y > (heroH - innerHeight * 1.1) || MQLS.some(m => m.matches) && y > 40;
     if (solid !== navSolid) { navSolid = solid; nav.classList.toggle('solid', solid); }
   }
+
+  /* ---------- phones: quick contact bar between the hero and the contact section ---------- */
+  const mBar = $('.m-bar');
+  const ctSec = $('#contact');
+  let mBarOn = null;
+  function mBarState(y, ctTop, moR) {
+    const vh = innerHeight;
+    // stays out of the way of the hold-to-focus button and of the contact section itself
+    const overMoment = moR && moR.top < vh * 0.9 && moR.bottom > vh * 0.25;
+    const on = y > heroH * 0.7 && ctTop > vh * 0.85 && !overMoment;
+    if (on !== mBarOn) { mBarOn = on; mBar.classList.toggle('show', on); }
+  }
+
+  /* ---------- page scroll work, batched into one frame: every read first, then the writes ---------- */
+  let pageRaf = null;
+  function pageFrame() {
+    pageRaf = null;
+    const y = scrollY;
+    const stepsTop = steps && !linePinned ? steps.getBoundingClientRect().top : undefined;
+    const mfRect = mfWords.length ? mfEl.getBoundingClientRect() : null;
+    const ctTop = ctSec.getBoundingClientRect().top;
+    const moR = moSec.getBoundingClientRect();
+    if (stepsTop !== undefined) drawLine(stepsTop);
+    navState(y);
+    if (mfRect) updateManifesto(mfRect);
+    mBarState(y, ctTop, moR);
+  }
+  const schedulePage = () => { if (pageRaf === null) pageRaf = requestAnimationFrame(pageFrame); };
 
   /* ---------- boot ---------- */
   applyLang(readLang(), false);
@@ -831,16 +862,18 @@
   setupReveals();
   setupLive();
   setupReels();
-  addEventListener('scroll', () => { drawLine(); navState(); updateManifesto(); }, { passive: true });
+  addEventListener('scroll', schedulePage, { passive: true });
   addEventListener('resize', () => {
-    drawLine(); navState(); updateManifesto();
+    heroH = hero.offsetHeight;
+    schedulePage();
     lensD.layout(); lensM.layout();
     if (scrubOn) { updateIntro(shown); onScroll(); }
   }, { passive: true });
-  drawLine(); navState();
+  schedulePage();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { lensD.layout(); lensM.layout(); if (scrubOn) updateIntro(shown); });
 
   MQLS.forEach(m => m.addEventListener('change', applyHeroMode));
+  MQLS.forEach(m => m.addEventListener('change', () => { heroH = hero.offsetHeight; schedulePage(); }));
   applyHeroMode();
   reduceMQ.addEventListener('change', e => { if (e.matches) pinToFinalStates(); else applyHeroMode(); });
   if (reduceMQ.matches) pinToFinalStates();
