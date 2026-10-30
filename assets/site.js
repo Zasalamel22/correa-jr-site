@@ -346,6 +346,7 @@
     $$('#wa, #wa2').forEach(a => { a.href = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(d._wa); });
     refreshReelLabels();
     if (save) { try { localStorage.setItem('jr-lang', l); } catch (e) {} }
+    document.dispatchEvent(new CustomEvent('jr:lang', { detail: l }));
     bands.forEach(b => { b.op = -1; b.k = -1; b.ks = -1; b.kb = -1; });
     if (scrubOn) updateCaptions(shown, performance.now());
     requestAnimationFrame(() => { if (lensD) lensD.layout(); if (lensM) lensM.layout(); if (scrubOn) updateIntro(shown); });

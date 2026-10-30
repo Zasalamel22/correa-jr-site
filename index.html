@@ -35,6 +35,7 @@
       <li><a href="#approach" data-i18n="nav.approach">Подход</a></li>
       <li><a href="#services" data-i18n="nav.services">Услуги</a></li>
       <li><a href="#faq" data-i18n="nav.faq">Вопросы</a></li>
+      <li><a href="#files" data-i18n="nav.files">Клиентам</a></li>
     </ul>
   </nav>
   <div class="nav-right">
@@ -303,6 +304,35 @@
   </div>
 </section>
 
+<section class="files sec" id="files" aria-labelledby="fl-h">
+  <div class="sec-head">
+    <p class="kicker"><span class="num">09</span> <span data-i18n="fl.kicker">Клиентам</span></p>
+    <h2 id="fl-h" data-i18n="fl.title">Ваши <em>материалы</em></h2>
+    <p class="sec-lede" data-i18n="fl.lede">Введите код из моего сообщения, и здесь появятся ваши фото и видео. Скачивайте по одному файлу или всё сразу.</p>
+  </div>
+  <form class="fl-form" id="fl-form" novalidate>
+    <label class="fl-label" for="fl-code" data-i18n="fl.label">Код</label>
+    <div class="fl-row">
+      <input class="fl-input" id="fl-code" name="code" type="text" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="200" placeholder="AbC1dEf2GhIj3K" aria-describedby="fl-note">
+      <button class="btn" type="submit" data-i18n="fl.open">Открыть</button>
+    </div>
+    <p class="fl-note" id="fl-note" data-i18n="fl.note">Код личный, не публикуйте его. Ссылка из сообщения открывает материалы сразу.</p>
+  </form>
+  <p class="fl-status" id="fl-status" role="status" aria-live="polite"></p>
+  <div class="fl-result" id="fl-result" hidden>
+    <div class="fl-head">
+      <div>
+        <p class="fl-name" id="fl-name"></p>
+        <p class="fl-meta" id="fl-meta"></p>
+      </div>
+      <button class="btn" type="button" id="fl-all"></button>
+    </div>
+    <div class="fl-dirs" id="fl-dirs"></div>
+    <ul class="fl-grid" id="fl-grid"></ul>
+    <button class="btn btn-ghost fl-more" type="button" id="fl-more" hidden></button>
+  </div>
+</section>
+
 </main>
 
 <footer class="foot">
@@ -310,9 +340,21 @@
   <div class="foot-row">
     <p>© 2026 Correa Jr Films · <span data-i18n="ft.city">Москва</span></p>
     <p data-i18n="ft.credit">Фото на главном экране: Андрей Метёлков</p>
+    <p><a href="#files" data-i18n="ft.files">Скачать материалы</a></p>
     <p data-i18n="ft.privacy">Сайт не собирает персональные данные и не использует cookies. Вы пишете напрямую в мессенджер.</p>
   </div>
 </footer>
+
+<div class="fl-box" id="fl-box" hidden role="dialog" aria-modal="true" aria-labelledby="fl-box-name">
+  <div class="fl-box-in">
+    <div class="fl-box-media" id="fl-box-media"></div>
+    <div class="fl-box-bar">
+      <p class="fl-box-name" id="fl-box-name"></p>
+      <a class="btn" id="fl-box-dl" href="#" rel="noopener"></a>
+      <button class="btn btn-ghost" type="button" id="fl-box-close"></button>
+    </div>
+  </div>
+</div>
 
 <div class="m-bar">
   <a class="btn" id="wa2" href="https://wa.me/79362845488?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D1%81%D1%8A%D1%91%D0%BC%D0%BA%D1%83." target="_blank" rel="noopener">WhatsApp</a>
@@ -321,5 +363,6 @@
 
 <script src="assets/i18n.js"></script>
 <script src="assets/site.js"></script>
+<script src="assets/files.js"></script>
 </body>
 </html>

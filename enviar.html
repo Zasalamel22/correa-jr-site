@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Enviar archivos · Correa Jr</title>
+<meta name="theme-color" content="#07080f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2307080f'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%23ece9e4' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='9' fill='%236d93ff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/site.css">
+<style>
+  body{animation:none}
+  .tool{max-width:760px;margin:0 auto;padding:48px var(--pad) 80px}
+  .tool h1{font-size:clamp(44px,8vw,76px);text-transform:uppercase;margin:10px 0 14px}
+  .tool h1 em{text-transform:none;font-size:1.1em}
+  .tool .lede{color:var(--text-secondary);max-width:56ch;margin-bottom:34px}
+  .steps-mini{counter-reset:s;list-style:none;padding:0;margin:0 0 36px;display:grid;gap:10px}
+  .steps-mini li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:10px;color:var(--text-secondary);font-size:15px}
+  .steps-mini li::before{content:counter(s,decimal-leading-zero);font:500 13px/1.6 var(--f-mono);color:var(--accent-text)}
+  .steps-mini b{color:var(--text-primary);font-weight:600}
+  .field{margin-bottom:22px}
+  .field label{display:block;font:500 12px/1 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:10px}
+  .field input,.field textarea{width:100%;font:500 16px/1.4 var(--f-mono);color:var(--text-primary);background:var(--panel);border:1px solid var(--line-strong);border-radius:14px;padding:14px 16px}
+  .field textarea{min-height:130px;resize:vertical;font-family:var(--f-body)}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--accent-hover);box-shadow:0 0 0 3px rgba(74,119,255,.28)}
+  .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:999px;padding:3px}
+  .seg button{font:500 13px var(--f-mono);letter-spacing:.08em;background:none;border:0;color:var(--text-secondary);padding:9px 14px;border-radius:999px;cursor:pointer}
+  .seg button[aria-pressed=true]{background:var(--panel-2);color:var(--text-primary)}
+  .check{margin:-6px 0 26px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);font-size:15px;color:var(--text-secondary)}
+  .check.ok{border-color:rgba(90,200,140,.45);color:#bfe9cf}
+  .check.bad{border-color:rgba(255,120,125,.5);color:#ffb3b6}
+  .check:empty{display:none}
+  .out{display:none}
+  .out.on{display:block}
+  .linkbox{font:500 14px/1.4 var(--f-mono);color:var(--accent-text);word-break:break-all;margin-bottom:22px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px}
+  .back{display:inline-block;margin-top:44px;font-size:14px}
+  @media (pointer:coarse){.seg button{min-height:44px}}
+</style>
+</head>
+<body>
+<main class="tool">
+  <p class="kicker">Correa Jr · herramienta privada</p>
+  <h1>Enviar <em>archivos</em></h1>
+  <p class="lede">Comparte la carpeta del cliente en Yandex Disk, pega aquí el enlace y te preparo el mensaje con su código. El cliente abre el enlace y descarga sus fotos y videos desde la página.</p>
+
+  <ol class="steps-mini">
+    <li><span>Sube las fotos y videos a una carpeta de <b>Yandex Disk</b> (app del móvil, programa del ordenador o disk.yandex.ru).</span></li>
+    <li><span>Pulsa <b>Поделиться</b> en la carpeta y copia el enlace. No desactives «Разрешить скачивание».</span></li>
+    <li><span>Pégalo abajo, elige el idioma del cliente y envíale el mensaje.</span></li>
+  </ol>
+
+  <div class="field">
+    <label for="src">Enlace de Yandex Disk</label>
+    <input id="src" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://disk.yandex.ru/d/AbC1dEf2GhIj3K">
+  </div>
+  <p class="check" id="check" role="status" aria-live="polite"></p>
+
+  <div class="out" id="out">
+    <div class="field">
+      <label>Idioma del cliente</label>
+      <div class="seg" role="group" aria-label="Idioma del mensaje">
+        <button type="button" data-l="ru" aria-pressed="true">RU</button>
+        <button type="button" data-l="en" aria-pressed="false">EN</button>
+        <button type="button" data-l="es" aria-pressed="false">ES</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="phone">WhatsApp del cliente (opcional)</label>
+      <input id="phone" type="tel" inputmode="tel" autocomplete="off" placeholder="+7 900 000-00-00">
+    </div>
+    <div class="field">
+      <label>Enlace para el cliente</label>
+      <p class="linkbox" id="link"></p>
+    </div>
+    <div class="field">
+      <label for="msg">Mensaje</label>
+      <textarea id="msg"></textarea>
+    </div>
+    <div class="actions">
+      <a class="btn" id="wa" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      <a class="btn btn-ghost" id="tg" href="#" target="_blank" rel="noopener">Telegram</a>
+      <button class="btn btn-ghost" type="button" id="copy">Copiar mensaje</button>
+      <a class="btn btn-ghost" id="try" href="#" target="_blank" rel="noopener">Ver como cliente</a>
+    </div>
+  </div>
+
+  <a class="back" href="./">Volver al sitio</a>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const API = 'https://cloud-api.yandex.net/v1/disk/public/resources';
+  const $ = s => document.querySelector(s);
+  const src = $('#src'), check = $('#check'), out = $('#out'), linkEl = $('#link'), msg = $('#msg'), phone = $('#phone');
+  const MSG = {
+    ru: (link, code) => 'Здравствуйте! Ваши материалы готовы. Скачать фото и видео можно здесь:\n' + link + '\n\nКод: ' + code + '\nCorrea Jr',
+    en: (link, code) => 'Hi! Your files are ready. You can download your photos and videos here:\n' + link + '\n\nCode: ' + code + '\nCorrea Jr',
+    es: (link, code) => '¡Hola! Tus archivos están listos. Puedes descargar tus fotos y videos aquí:\n' + link + '\n\nCódigo: ' + code + '\nCorrea Jr'
+  };
+  let lang = 'ru', code = null, edited = false, seq = 0;
+
+  function parseCode(raw) {
+    const s = (raw || '').trim();
+    const m = s.match(/(?:yadi\.sk|disk\.(?:360\.)?yandex\.[a-z.]+)\/(?:d|i)\/([A-Za-z0-9_-]{4,80})/);
+    const c = m ? m[1] : s;
+    return /^[A-Za-z0-9_-]{4,80}$/.test(c) ? c : null;
+  }
+  const clientLink = () => new URL('./', location.href).href + '?code=' + encodeURIComponent(code) + (lang !== 'ru' ? '&lang=' + lang : '') + '#files';
+  function size(b) { const u = ['B', 'KB', 'MB', 'GB', 'TB']; let i = 0; while (b >= 1024 && i < 4) { b /= 1024; i++; } return (i && b < 10 ? b.toFixed(1) : Math.round(b)) + ' ' + u[i]; }
+
+  function refresh() {
+    if (!code) return;
+    const link = clientLink();
+    linkEl.textContent = link;
+    if (!edited) msg.value = MSG[lang](link, code);
+    const text = encodeURIComponent(msg.value);
+    const num = phone.value.replace(/\D/g, '');
+    $('#wa').href = 'https://wa.me/' + (num.length >= 10 ? num : '') + '?text=' + text;
+    $('#tg').href = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(msg.value.replace(link, '').trim());
+    $('#try').href = link;
+  }
+
+  async function verify() {
+    const my = ++seq;
+    code = parseCode(src.value);
+    edited = false;
+    if (!src.value.trim()) { check.textContent = ''; check.className = 'check'; out.classList.remove('on'); return; }
+    if (!code) { check.textContent = 'Eso no parece un enlace de Yandex Disk. Debe verse así: https://disk.yandex.ru/d/AbC1dEf2GhIj3K'; check.className = 'check bad'; out.classList.remove('on'); return; }
+    check.textContent = 'Comprobando la carpeta…'; check.className = 'check';
+    try {
+      const res = await fetch(API + '?' + new URLSearchParams({ public_key: 'https://disk.yandex.ru/d/' + code, limit: 1000 }));
+      const data = await res.json().catch(() => ({}));
+      if (my !== seq) return;
+      if (!res.ok) {
+        check.textContent = res.status === 404 ? 'No encuentro esa carpeta. ¿Está compartida? Copia otra vez el enlace desde «Поделиться».' : 'Yandex Disk no deja ver esta carpeta (¿descargas desactivadas?). Revisa la configuración del enlace.';
+        check.className = 'check bad'; out.classList.remove('on'); return;
+      }
+      const items = data._embedded ? data._embedded.items : [data];
+      const files = items.filter(i => i.type === 'file'), dirs = items.length - files.length;
+      const bytes = files.reduce((n, i) => n + (i.size || 0), 0);
+      check.textContent = 'Carpeta «' + data.name + '»: ' + files.length + (files.length === 1 ? ' archivo' : ' archivos') + (dirs ? ' y ' + dirs + (dirs === 1 ? ' subcarpeta' : ' subcarpetas') : '') + ' · ' + size(bytes) + '. Lista para enviar.';
+      check.className = 'check ok';
+      out.classList.add('on');
+      refresh();
+    } catch (e) {
+      if (my !== seq) return;
+      check.textContent = 'No pude conectar con Yandex Disk. Revisa tu internet y vuelve a pegar el enlace.'; check.className = 'check bad';
+    }
+  }
+
+  src.addEventListener('input', verify);
+  phone.addEventListener('input', refresh);
+  msg.addEventListener('input', () => { edited = true; refresh(); });
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+    lang = b.dataset.l; edited = false;
+    document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    refresh();
+  }));
+  $('#copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(msg.value); } catch (e) { msg.select(); document.execCommand('copy'); }
+    $('#copy').textContent = 'Copiado';
+    setTimeout(() => { $('#copy').textContent = 'Copiar mensaje'; }, 1800);
+  });
+})();
+</script>
+</body>
+</html>

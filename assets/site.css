@@ -385,6 +385,57 @@ h2 em,.hero-title em,.brand em,.settle-title .acc,.foot-mark em,.wm-row em{text-
 .foot-row{display:flex;flex-wrap:wrap;gap:10px 32px;color:var(--text-secondary);font-size:13px}
 .foot-row p:last-child{flex-basis:100%}
 
+/* client files (Yandex Disk folder by code) */
+.fl-form{max-width:680px}
+.fl-label{display:block;font:500 12px/1 var(--f-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--text-secondary);margin-bottom:12px}
+.fl-row{display:flex;gap:10px}
+.fl-input{flex:1;min-width:0;font:500 18px/1.2 var(--f-mono);letter-spacing:.04em;color:var(--text-primary);background:var(--panel);border:1px solid var(--line-strong);border-radius:999px;padding:16px 22px;transition:border-color .3s var(--ease-out),box-shadow .3s var(--ease-out)}
+.fl-input::placeholder{color:#7a82a3}
+.fl-input:focus{outline:none;border-color:var(--accent-hover);box-shadow:0 0 0 3px rgba(74,119,255,.28)}
+.fl-note{margin-top:12px;font-size:14px;color:var(--text-secondary)}
+.fl-status{min-height:1.6em;margin-top:22px;color:var(--text-secondary)}
+.fl-status:empty{margin-top:0;min-height:0}
+.fl-status.is-error{color:#ff9ea2}
+.fl-status.is-busy::before{content:"";display:inline-block;width:12px;height:12px;border:2px solid var(--accent-text);border-right-color:transparent;border-radius:50%;margin-right:10px;vertical-align:-1px;animation:flspin .8s linear infinite}
+@keyframes flspin{to{transform:rotate(360deg)}}
+.fl-result{margin-top:30px}
+.fl-result[aria-busy=true]{opacity:.55;transition:opacity .3s}
+.fl-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.fl-name{font:800 clamp(28px,3vw,46px)/1 var(--f-display);text-transform:uppercase;overflow-wrap:anywhere}
+.fl-meta{margin-top:8px;font:500 13px/1.4 var(--f-mono);color:var(--text-secondary);letter-spacing:.06em}
+.fl-dirs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.fl-dirs:empty{display:none}
+.fl-chip{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;border:1px solid var(--line-strong);background:var(--panel);color:var(--text-primary);font:600 15px/1 var(--f-body);cursor:pointer;transition:border-color .3s var(--ease-out)}
+.fl-chip svg{width:16px;height:16px;fill:var(--accent-text)}
+.fl-chip:hover{border-color:var(--accent-text)}
+.fl-back{color:var(--accent-text)}
+.fl-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.fl-tile{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fl-thumb{position:relative;display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;background:#0b0e1a;cursor:zoom-in;overflow:hidden}
+.fl-tile.is-file .fl-thumb{cursor:pointer}
+.fl-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease-out)}
+.fl-thumb:hover img{transform:scale(1.04)}
+.fl-thumb.no-preview::before{content:"";position:absolute;inset:26% 32%;border:1px dashed var(--line-strong);border-radius:10px}
+.fl-kind{position:absolute;left:10px;top:10px;font:500 10px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;background:rgba(7,8,15,.72);color:var(--text-primary);padding:6px 8px;border-radius:8px}
+.fl-play{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(7,8,15,.62);border:1px solid rgba(236,233,228,.45);display:grid;place-items:center}
+.fl-play svg{width:18px;height:18px;fill:var(--text-primary)}
+.fl-cap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:12px 14px 14px;align-items:center}
+.fl-file{grid-column:1;font-size:14px;line-height:1.3;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fl-size{grid-column:1;font:500 12px/1.3 var(--f-mono);color:var(--text-secondary)}
+.fl-dl{grid-column:2;grid-row:1 / 3;font:600 14px/1 var(--f-body);color:#fff;background:var(--accent);border-radius:999px;padding:11px 14px;white-space:nowrap;transition:background .3s var(--ease-out)}
+.fl-dl:hover{background:#2450d4;color:#fff}
+.fl-more{margin:26px auto 0;display:flex}
+.fl-more[hidden]{display:none}
+.fl-box{position:fixed;inset:0;z-index:95;background:rgba(4,5,10,.95);display:flex;align-items:center;justify-content:center;padding:20px}
+.fl-box[hidden]{display:none}
+.fl-box-in{width:min(1100px,100%);max-height:100%;display:flex;flex-direction:column;gap:14px}
+.fl-box-media{min-height:0;display:flex;align-items:center;justify-content:center}
+.fl-box-media img,.fl-box-media video{max-width:100%;max-height:calc(100vh - 150px);max-height:calc(100svh - 150px);border-radius:10px;background:#000}
+.fl-box-msg{color:var(--text-secondary);text-align:center;padding:40px 10px}
+.fl-box-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.fl-box-name{flex:1 1 200px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:500 13px/1.3 var(--f-mono);color:var(--text-secondary)}
+html.fl-lock{overflow:hidden}
+
 /* quick contact bar (phones only) */
 .m-bar{display:none}
 
@@ -491,6 +542,19 @@ h2 em,.hero-title em,.brand em,.settle-title .acc,.foot-mark em,.wm-row em{text-
   /* footer: leave room for the contact bar */
   .foot{padding:44px var(--pad) 104px}
   .foot-mark{margin-bottom:26px}
+
+  /* client files */
+  .fl-input{font-size:16px;padding:15px 18px}
+  .fl-row .btn{padding:15px 20px}
+  .fl-note{font-size:13px}
+  .fl-head{align-items:stretch}
+  .fl-head>div{flex-basis:100%}
+  .fl-head .btn{flex:1 1 100%}
+  .fl-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .fl-cap{grid-template-columns:minmax(0,1fr);padding:10px 10px 12px}
+  .fl-dl{grid-column:1;grid-row:auto;margin-top:8px;text-align:center;padding:11px 8px}
+  .fl-box{padding:12px}
+  .fl-box-bar .btn{flex:1 1 40%}
 
   .m-bar{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:1.4fr 1fr;gap:10px;padding:12px var(--pad) calc(12px + env(safe-area-inset-bottom));background:linear-gradient(rgba(7,8,15,0),rgba(7,8,15,.92) 34%);visibility:hidden;transform:translateY(130%);transition:transform .5s var(--ease-out),visibility 0s .5s}
   .m-bar.show{visibility:visible;transform:none;transition:transform .5s var(--ease-out),visibility 0s}

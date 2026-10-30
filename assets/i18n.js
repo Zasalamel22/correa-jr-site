@@ -57,7 +57,21 @@ window.I18N = {
     'ct.kicker': 'Контакт', 'ct.title': 'Расскажите, что {снимаем}',
     'ct.lede': 'Пишите в мессенджер или звоните. Без форм и анкет: вы пишете мне напрямую.', 'ct.call': 'Позвонить',
     'ft.city': 'Москва', 'ft.credit': 'Фото на главном экране: Андрей Метёлков',
-    'ft.privacy': 'Сайт не собирает персональные данные и не использует cookies. Вы пишете напрямую в мессенджер.'
+    'ft.privacy': 'Сайт не собирает персональные данные и не использует cookies. Вы пишете напрямую в мессенджер.',
+    'nav.files': 'Клиентам', 'ft.files': 'Скачать материалы',
+    'fl.kicker': 'Клиентам', 'fl.title': 'Ваши {материалы}',
+    'fl.lede': 'Введите код из моего сообщения, и здесь появятся ваши фото и видео. Скачивайте по одному файлу или всё сразу.',
+    'fl.label': 'Код', 'fl.open': 'Открыть',
+    'fl.note': 'Код личный, не публикуйте его. Ссылка из сообщения открывает материалы сразу.',
+    _fl: {
+      loading: 'Загружаю…', invalid: 'Похоже, в коде ошибка. Скопируйте его из сообщения целиком.',
+      notFound: 'Код не найден. Проверьте его или напишите мне.', blocked: 'Скачивание этой папки закрыто. Напишите мне, я открою доступ.',
+      network: 'Не удалось связаться с хранилищем. Проверьте интернет и попробуйте ещё раз.', empty: 'Папка пока пустая. Я напишу, когда всё будет готово.',
+      all: 'Скачать всё (ZIP)', preparing: 'Готовлю архив…', download: 'Скачать', more: 'Показать ещё', back: 'Назад', close: 'Закрыть',
+      video: 'Видео', photo: 'Фото', file: 'Файл', cantPlay: 'Это видео не открывается в браузере. Скачайте его, чтобы посмотреть.',
+      units: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+      count: n => { const a = n % 10, b = n % 100; return n + ' ' + (a === 1 && b !== 11 ? 'файл' : a >= 2 && a <= 4 && (b < 12 || b > 14) ? 'файла' : 'файлов'); }
+    }
   },
   en: {
     _title: 'Correa Jr · Videographer and photographer in Moscow',
@@ -114,7 +128,21 @@ window.I18N = {
     'ct.kicker': 'Contact', 'ct.title': 'Tell me what we are {filming}',
     'ct.lede': 'Message me or call. No forms: you write to me directly.', 'ct.call': 'Call',
     'ft.city': 'Moscow', 'ft.credit': 'Hero photos: Andrey Metelkov',
-    'ft.privacy': 'This site collects no personal data and uses no cookies. You write directly in your messenger.'
+    'ft.privacy': 'This site collects no personal data and uses no cookies. You write directly in your messenger.',
+    'nav.files': 'Clients', 'ft.files': 'Download your files',
+    'fl.kicker': 'For clients', 'fl.title': 'Your {files}',
+    'fl.lede': 'Enter the code from my message and your photos and videos will appear here. Download them one by one or all at once.',
+    'fl.label': 'Code', 'fl.open': 'Open',
+    'fl.note': 'The code is private, please do not share it. The link in my message opens your files directly.',
+    _fl: {
+      loading: 'Loading…', invalid: 'The code looks mistyped. Copy it from the message in full.',
+      notFound: 'Code not found. Please check it or message me.', blocked: 'Downloads are closed for this folder. Message me and I will open it.',
+      network: 'Could not reach the storage. Check your connection and try again.', empty: 'The folder is empty for now. I will message you when everything is ready.',
+      all: 'Download all (ZIP)', preparing: 'Preparing the archive…', download: 'Download', more: 'Show more', back: 'Back', close: 'Close',
+      video: 'Video', photo: 'Photo', file: 'File', cantPlay: 'This video does not open in the browser. Download it to watch.',
+      units: ['B', 'KB', 'MB', 'GB', 'TB'],
+      count: n => n + (n === 1 ? ' file' : ' files')
+    }
   },
   es: {
     _title: 'Correa Jr · Videógrafo y fotógrafo en Moscú',
@@ -171,6 +199,20 @@ window.I18N = {
     'ct.kicker': 'Contacto', 'ct.title': 'Cuéntame qué {filmamos}',
     'ct.lede': 'Escríbeme o llámame. Sin formularios: me escribes directamente.', 'ct.call': 'Llamar',
     'ft.city': 'Moscú', 'ft.credit': 'Fotos de portada: Andrey Metelkov',
-    'ft.privacy': 'Este sitio no recoge datos personales ni usa cookies. Me escribes directamente por mensajería.'
+    'ft.privacy': 'Este sitio no recoge datos personales ni usa cookies. Me escribes directamente por mensajería.',
+    'nav.files': 'Clientes', 'ft.files': 'Descarga tus archivos',
+    'fl.kicker': 'Para clientes', 'fl.title': 'Tus {archivos}',
+    'fl.lede': 'Escribe el código de mi mensaje y aquí aparecerán tus fotos y videos. Descárgalos uno a uno o todos juntos.',
+    'fl.label': 'Código', 'fl.open': 'Abrir',
+    'fl.note': 'El código es privado, no lo publiques. El enlace de mi mensaje abre tus archivos directamente.',
+    _fl: {
+      loading: 'Cargando…', invalid: 'Parece que el código tiene un error. Cópialo completo del mensaje.',
+      notFound: 'No encuentro ese código. Revísalo o escríbeme.', blocked: 'La descarga de esta carpeta está cerrada. Escríbeme y la abro.',
+      network: 'No pude conectar con el almacenamiento. Revisa tu conexión e inténtalo de nuevo.', empty: 'La carpeta todavía está vacía. Te escribo cuando esté todo listo.',
+      all: 'Descargar todo (ZIP)', preparing: 'Preparando el archivo…', download: 'Descargar', more: 'Ver más', back: 'Volver', close: 'Cerrar',
+      video: 'Video', photo: 'Foto', file: 'Archivo', cantPlay: 'Este video no se abre en el navegador. Descárgalo para verlo.',
+      units: ['B', 'KB', 'MB', 'GB', 'TB'],
+      count: n => n + (n === 1 ? ' archivo' : ' archivos')
+    }
   }
 };
