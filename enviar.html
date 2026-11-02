@@ -45,8 +45,8 @@
   <p class="lede">Comparte la carpeta del cliente en Yandex Disk, pega aquí el enlace y te preparo el mensaje con su código. El cliente abre el enlace y descarga sus fotos y videos desde la página.</p>
 
   <ol class="steps-mini">
-    <li><span>Sube las fotos y videos a una carpeta de <b>Yandex Disk</b> (app del móvil, programa del ordenador o disk.yandex.ru).</span></li>
-    <li><span>Pulsa <b>Поделиться</b> en la carpeta y copia el enlace. No desactives «Разрешить скачивание».</span></li>
+    <li><span>En <b>Yandex Disk</b>, ve a <b>Файлы</b>, crea una carpeta para el cliente y sube ahí sus fotos y videos (app del móvil, programa del ordenador o disk.yandex.ru). Usa una carpeta, no un álbum: los álbumes no se pueden leer desde la página.</span></li>
+    <li><span>En la carpeta pulsa <b>Поделиться</b> → <b>Копировать ссылку</b>. El enlace correcto tiene <b>/d/</b>, por ejemplo https://disk.yandex.ru/d/AbC1dEf2GhIj3K. No desactives «Разрешить скачивание».</span></li>
     <li><span>Pégalo abajo, elige el idioma del cliente y envíale el mensaje.</span></li>
   </ol>
 
@@ -127,6 +127,10 @@
     code = parseCode(src.value);
     edited = false;
     if (!src.value.trim()) { check.textContent = ''; check.className = 'check'; out.classList.remove('on'); return; }
+    if (/(?:yadi\.sk|disk\.(?:360\.)?yandex\.[a-z.]+)\/a\//.test(src.value)) {
+      check.textContent = 'Ese enlace es de un álbum (/a/), y Yandex no deja leer los álbumes desde fuera. Comparte una carpeta: en Yandex Disk ve a «Файлы», crea una carpeta, sube ahí las fotos y videos y en la carpeta pulsa «Поделиться» → «Копировать ссылку». El enlace correcto tiene /d/.';
+      check.className = 'check bad'; out.classList.remove('on'); return;
+    }
     if (!code) { check.textContent = 'Eso no parece un enlace de Yandex Disk. Debe verse así: https://disk.yandex.ru/d/AbC1dEf2GhIj3K'; check.className = 'check bad'; out.classList.remove('on'); return; }
     check.textContent = 'Comprobando la carpeta…'; check.className = 'check';
     try {

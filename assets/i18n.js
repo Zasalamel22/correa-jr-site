@@ -64,6 +64,7 @@ window.I18N = {
     'fl.label': 'Код', 'fl.open': 'Открыть',
     'fl.note': 'Код личный, не публикуйте его. Ссылка из сообщения открывает материалы сразу.',
     _fl: {
+      album: 'Это ссылка на альбом, а не на папку. Напишите мне, и я пришлю правильную ссылку.',
       loading: 'Загружаю…', invalid: 'Похоже, в коде ошибка. Скопируйте его из сообщения целиком.',
       notFound: 'Код не найден. Проверьте его или напишите мне.', blocked: 'Скачивание этой папки закрыто. Напишите мне, я открою доступ.',
       network: 'Не удалось связаться с хранилищем. Проверьте интернет и попробуйте ещё раз.', empty: 'Папка пока пустая. Я напишу, когда всё будет готово.',
@@ -135,6 +136,7 @@ window.I18N = {
     'fl.label': 'Code', 'fl.open': 'Open',
     'fl.note': 'The code is private, please do not share it. The link in my message opens your files directly.',
     _fl: {
+      album: 'This is an album link, not a folder. Message me and I will send the right link.',
       loading: 'Loading…', invalid: 'The code looks mistyped. Copy it from the message in full.',
       notFound: 'Code not found. Please check it or message me.', blocked: 'Downloads are closed for this folder. Message me and I will open it.',
       network: 'Could not reach the storage. Check your connection and try again.', empty: 'The folder is empty for now. I will message you when everything is ready.',
@@ -206,6 +208,7 @@ window.I18N = {
     'fl.label': 'Código', 'fl.open': 'Abrir',
     'fl.note': 'El código es privado, no lo publiques. El enlace de mi mensaje abre tus archivos directamente.',
     _fl: {
+      album: 'Ese enlace es de un álbum, no de una carpeta. Escríbeme y te mando el enlace correcto.',
       loading: 'Cargando…', invalid: 'Parece que el código tiene un error. Cópialo completo del mensaje.',
       notFound: 'No encuentro ese código. Revísalo o escríbeme.', blocked: 'La descarga de esta carpeta está cerrada. Escríbeme y la abro.',
       network: 'No pude conectar con el almacenamiento. Revisa tu conexión e inténtalo de nuevo.', empty: 'La carpeta todavía está vacía. Te escribo cuando esté todo listo.',

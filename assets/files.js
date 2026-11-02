@@ -244,6 +244,7 @@
   /* ---------- wiring ---------- */
   form.addEventListener('submit', e => {
     e.preventDefault();
+    if (/(?:yadi\.sk|disk\.(?:360\.)?yandex\.[a-z.]+)\/a\//.test(input.value)) { setStatus(T().album, 'error'); result.hidden = true; input.focus(); return; }
     const code = parseCode(input.value);
     if (!code) { setStatus(T().invalid, 'error'); result.hidden = true; input.focus(); return; }
     input.value = code;
